@@ -33,11 +33,6 @@ func TestParseSeconds(t *testing.T) {
 
 func TestParseHTTPDate(t *testing.T) {
 	now := time.Now()
-	// orig := nowFunc
-	// nowFunc = func() time.Time { return now }
-	// defer func() {
-	// 	nowFunc = orig
-	// }()
 	aMinuteLater := now.Add(time.Minute)
 
 	cases := []struct {
