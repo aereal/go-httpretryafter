@@ -14,7 +14,7 @@ var (
 	// ErrInvalidFormat is parsing error that represents given Retry-After neither valid seconds nor valid HTTP date.
 	ErrInvalidFormat = errors.New("Retry-After value must be seconds integer or HTTP date string")
 
-	nowFunc = func() time.Time { return time.Now() }
+	nowFunc = func() time.Time { return time.Now().UTC() }
 )
 
 // Parse tries to parse the value as seconds or HTTP date.
@@ -47,5 +47,5 @@ func ParseHTTPDate(retryAfter string) (time.Time, error) {
 	if err != nil {
 		return time.Time{}, err
 	}
-	return parsed, nil
+	return parsed.UTC(), nil
 }
