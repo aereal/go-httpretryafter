@@ -32,12 +32,7 @@ func TestParseSeconds(t *testing.T) {
 }
 
 func TestParseHTTPDate(t *testing.T) {
-	now := time.Now()
-	// orig := nowFunc
-	// nowFunc = func() time.Time { return now }
-	// defer func() {
-	// 	nowFunc = orig
-	// }()
+	now := time.Now().Round(time.Second).UTC()
 	aMinuteLater := now.Add(time.Minute)
 
 	cases := []struct {
@@ -56,7 +51,7 @@ func TestParseHTTPDate(t *testing.T) {
 				t.Errorf("error = %v, wantErr %v", err, c.wantErr)
 				return
 			}
-			if got.Unix() != c.want.Unix() {
+			if !eqTimeInSeconds(got, c.want) {
 				t.Errorf("got = %s, want %s", got, c.want)
 			}
 		})
@@ -64,7 +59,7 @@ func TestParseHTTPDate(t *testing.T) {
 }
 
 func TestParse(t *testing.T) {
-	now := time.Now()
+	now := time.Now().Round(time.Second).UTC()
 	orig := nowFunc
 	nowFunc = func() time.Time { return now }
 	defer func() {
@@ -89,9 +84,13 @@ func TestParse(t *testing.T) {
 				t.Errorf("error = %v, wantErr %v", err, c.wantErr)
 				return
 			}
-			if got.Unix() != c.want.Unix() {
+			if !eqTimeInSeconds(got, c.want) {
 				t.Errorf("got = %s, want %s", got, c.want)
 			}
 		})
 	}
+}
+
+func eqTimeInSeconds(x, y time.Time) bool {
+	return x.Round(time.Second).Equal(y.Round(time.Second))
 }
