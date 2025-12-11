@@ -6,38 +6,36 @@ on:
   push:
     branches:
       - main
-  schedule:
-    -
-      cron: '0 1 * * *'
 jobs:
-  lint:
-    runs-on: ubuntu-latest
+  ok:
+    runs-on: ubuntu-24.04
+    needs:
+      - lint
+      - build
+    if: failure()
+    permissions: {}
     steps:
-      - uses: actions/checkout@v2
+      - run: exit 1
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: lint
-        uses: reviewdog/action-golangci-lint@v1
+        uses: reviewdog/action-golangci-lint@f9bba13753278f6a73b27a56a3ffb1bfda90ed71 # v2.8.0
   build:
     strategy:
       matrix:
         go_version:
-          - 1.11.x
-          - 1.12.x
-          - 1.13.x
-          - 1.14.x
-          - 1.15.x
+          - stable
+          - oldstable
         os:
-          - ubuntu-latest
+          - ubuntu-24.04
+      fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v1.1.2
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6.1.0
         with:
           go-version: ${{ matrix.go_version }}
-      - uses: actions/cache@v2
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ matrix.go_version }}-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-${{ matrix.go_version }}
       - name: test
         run: go test ./...
