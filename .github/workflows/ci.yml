@@ -11,7 +11,7 @@ on:
       cron: '0 1 * * *'
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
       - name: lint
@@ -26,7 +26,7 @@ jobs:
           - 1.14.x
           - 1.15.x
         os:
-          - ubuntu-latest
+          - ubuntu-24.04
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
