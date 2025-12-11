@@ -10,6 +10,15 @@ on:
     -
       cron: '0 1 * * *'
 jobs:
+  ok:
+    runs-on: ubuntu-24.04
+    needs:
+      - lint
+      - build
+    if: failure()
+    permissions: {}
+    steps:
+      - run: exit 1
   lint:
     runs-on: ubuntu-24.04
     steps:
