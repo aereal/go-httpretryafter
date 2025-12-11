@@ -6,9 +6,6 @@ on:
   push:
     branches:
       - main
-  schedule:
-    -
-      cron: '0 1 * * *'
 jobs:
   ok:
     runs-on: ubuntu-24.04
